@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+    php:
+        platform: linux
+        ports:
+            - '80:8000'
+        volumes:
+            - ./:/project
+        env_file:
+            - .env
+        build: .
+        hostname: resume_php
+        tty: true
