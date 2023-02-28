@@ -2,17 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+Route::get('/{any}', function (\Illuminate\Http\Request $request) {
+   $controllerName = '\\App\\Http\\Controllers\\' . ucfirst(str_starts_with($request->path(), '/') ? substr($request->path(), 1) : $request->path()) . 'Controller';
 
-Route::get('/', function () {
-    return view('welcome');
-});
+   if (class_exists($controllerName)) {
+       $controller = new $controllerName;
+
+       if (method_exists($controller, 'actionIndex'))
+           return $controller->actionIndex();
+   }
+
+   return abort(404);
+})->where('any', '.*');
